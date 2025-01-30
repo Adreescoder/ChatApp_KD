@@ -1,0 +1,190 @@
+{
+  "project_info": {
+    "project_number": "63775372251",
+    "project_id": "gen-lang-client-0267232601",
+    "storage_bucket": "gen-lang-client-0267232601.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63775372251:android:80cc86dfe072b5ddbeedfe",
+        "android_client_info": {
+          "package_name": "com.example.chatapp_kd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PsDA4BiFJ1kVZUtRNR2lvG5oiIOiwYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63775372251-1m2dsraj1717bn37ccjdsd3890icip7h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chillTime"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63775372251:android:bddc998c92ecf5f2beedfe",
+        "android_client_info": {
+          "package_name": "com.example.safar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PsDA4BiFJ1kVZUtRNR2lvG5oiIOiwYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63775372251-1m2dsraj1717bn37ccjdsd3890icip7h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chillTime"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63775372251:android:705470257d59f6a0beedfe",
+        "android_client_info": {
+          "package_name": "com.example.sky_nova"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PsDA4BiFJ1kVZUtRNR2lvG5oiIOiwYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63775372251-1m2dsraj1717bn37ccjdsd3890icip7h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chillTime"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63775372251:android:91be76c5527afc33beedfe",
+        "android_client_info": {
+          "package_name": "com.example.telesphere"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PsDA4BiFJ1kVZUtRNR2lvG5oiIOiwYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63775372251-1m2dsraj1717bn37ccjdsd3890icip7h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chillTime"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:63775372251:android:d5e61f0215fac640beedfe",
+        "android_client_info": {
+          "package_name": "com.sirbilal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1PsDA4BiFJ1kVZUtRNR2lvG5oiIOiwYI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "63775372251-0342t5k48tdpjtr879e26lsbmjs5ae0h.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "63775372251-1m2dsraj1717bn37ccjdsd3890icip7h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chillTime"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
