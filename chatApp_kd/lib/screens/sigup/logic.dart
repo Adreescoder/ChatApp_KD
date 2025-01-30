@@ -47,7 +47,7 @@ class SignupLogic extends GetxController {
         password: passwordController.text.trim(),
         confirmPassword: confirmPasswordController.text.trim(),
         imageUrl: "imageUrl",
-        isOnline: true,
+        isOnline: true, gender: "",
       );
 
       /// Save user to Firestore
