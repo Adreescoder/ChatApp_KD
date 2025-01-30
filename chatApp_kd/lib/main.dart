@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'button.dart';
+import 'copy.dart';
 import 'firebase_options.dart';
 import 'loading.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp KD'.toUpperCase(),
-      home:  ToggleButton(),
+      home:  SignUpScreen(),
     );
   }
 }
