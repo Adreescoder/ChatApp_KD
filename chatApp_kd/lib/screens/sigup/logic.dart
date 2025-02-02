@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class SignupScreenLogic extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,6 +12,17 @@ class SignupScreenLogic extends GetxController {
   final TextEditingController nameController = TextEditingController();
 
   RxBool isLoading = false.obs;
+  Rx<File?> selectedImage = Rx<File?>(null);
+
+  final ImagePicker _picker = ImagePicker();
+
+  // Function to pick an image
+  Future<void> pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImage.value = File(image.path);
+    }
+  }
 
   Future<void> signupFirebase() async {
     String email = emailController.text.trim();
@@ -32,6 +45,13 @@ class SignupScreenLogic extends GetxController {
       User? user = userCredential.user;
       if (user != null) {
         await user.updateDisplayName(name);
+
+        // Handle image upload (if any)
+        if (selectedImage.value != null) {
+          // You can upload the image to Firebase Storage or handle it as needed
+          // Example: uploadImage(selectedImage.value!);
+        }
+
         Get.snackbar("Success", "Account created successfully!",
             snackPosition: SnackPosition.BOTTOM);
       }
