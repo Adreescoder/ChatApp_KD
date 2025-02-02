@@ -1,6 +1,7 @@
 import 'package:chatapp_kd/screens/home/view.dart';
 import 'package:chatapp_kd/screens/sigup/view.dart';
 import 'package:chatapp_kd/test.dart';
+import 'package:chatapp_kd/you.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp KD'.toUpperCase(),
-      home:  AnimatedSignUpScreen(),
+      home:  HomeScreen(),
     );
   }
 }
