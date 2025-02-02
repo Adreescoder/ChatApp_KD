@@ -1,74 +1,53 @@
-import 'package:chatapp_kd/modles/user.dart';
-import 'package:chatapp_kd/screens/home/view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
-class SignupLogic extends GetxController {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+class SignupScreenLogic extends GetxController {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-  var isLoading = false.obs;
-  var isPasswordHidden = true.obs;
-  var isConfirmPasswordHidden = true.obs;
-
-  void togglePasswordVisibility() {
-    isPasswordHidden.value = !isPasswordHidden.value;
-  }
-  void toggleConfirmPasswordVisibility() {
-    isConfirmPasswordHidden.value = !isConfirmPasswordHidden.value;
-  }
+  RxBool isLoading = false.obs;
 
   Future<void> signupFirebase() async {
-    if (!formKey.currentState!.validate()) {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String name = nameController.text.trim();
+
+    if (email.isEmpty || password.isEmpty || name.isEmpty) {
+      Get.snackbar("Error", "Please fill all fields", snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
-    isLoading.value = true;
-
     try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
+      isLoading.value = true;
+
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
       );
 
-      String userId = userCredential.user!.uid;
-      UserModel userModel = UserModel(
-        id: userId,
-        name: nameController.text.trim(),
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-        confirmPassword: confirmPasswordController.text.trim(),
-        imageUrl: "imageUrl",
-        isOnline: true, gender: "",
-      );
-
-      /// Save user to Firestore
-      await firestore.collection("KD").doc(userId).set(userModel.toJson());
-
-      Get.snackbar("Success", "Account created successfully!");
-
-      Get.offAll(
-            () => HomePage(),
-        transition: Transition.circularReveal,
-        curve: Curves.easeInOutCubic,
-        duration: Duration(seconds: 4),
-      );
+      User? user = userCredential.user;
+      if (user != null) {
+        await user.updateDisplayName(name);
+        Get.snackbar("Success", "Account created successfully!",
+            snackPosition: SnackPosition.BOTTOM);
+      }
     } on FirebaseAuthException catch (e) {
-      Get.snackbar("Auth Error", e.message ?? "Something went wrong");
-    } on FirebaseException catch (e) {
-      Get.snackbar("Database Error", e.message ?? "Firestore issue occurred");
-    } catch (e) {
-      Get.snackbar("Signup Failed", "Unexpected error: $e");
+      Get.snackbar("Signup Error", e.message ?? "An error occurred",
+          snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
+  }
+
+  @override
+  void onClose() {
+    emailController.dispose();
+    passwordController.dispose();
+    nameController.dispose();
+    super.onClose();
   }
 }

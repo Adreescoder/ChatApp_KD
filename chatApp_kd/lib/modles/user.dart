@@ -6,7 +6,6 @@ class UserModel {
   String confirmPassword;
   String imageUrl;
   bool isOnline;
-  String gender; // نئی فیلڈ
 
   UserModel({
     required this.id,
@@ -16,7 +15,6 @@ class UserModel {
     required this.confirmPassword,
     required this.imageUrl,
     required this.isOnline,
-    required this.gender, // gender شامل کریں
   });
 
   // JSON se object banane ke liye
@@ -29,7 +27,6 @@ class UserModel {
       confirmPassword: json['confirmPassword'],
       imageUrl: json['imageUrl'],
       isOnline: json['isOnline'] ?? false,
-      gender: json['gender'] ?? 'Male', // gender کا ڈیفالٹ ویلیو
     );
   }
 
@@ -43,7 +40,6 @@ class UserModel {
       'confirmPassword': confirmPassword,
       'imageUrl': imageUrl,
       'isOnline': isOnline,
-      'gender': gender, // gender کو شامل کریں
     };
   }
 }

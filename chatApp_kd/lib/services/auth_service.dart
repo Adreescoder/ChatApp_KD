@@ -16,7 +16,7 @@ class AuthWrapper extends StatelessWidget {
         } else if (snapshot.hasData) {
           return HomePage(); // User is logged in
         } else {
-          return SignupPage(); // User is not logged in
+          return SignupScreen(); // User is not logged in
         }
       },
     );

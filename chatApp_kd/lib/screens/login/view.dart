@@ -139,7 +139,7 @@ class LoginPage extends StatelessWidget {
 
                 TextButton(
                   onPressed: () {
-                    Get.to(()=> SignupPage(),
+                    Get.to(()=> LoginPage(),
                       transition: Transition.circularReveal,
                       curve: Curves.easeInOutCubic,
                       duration: Duration(seconds: 4),);
