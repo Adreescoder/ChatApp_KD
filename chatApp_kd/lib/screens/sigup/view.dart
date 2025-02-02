@@ -12,186 +12,213 @@ class SignupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var smallSize = MediaQuery.of(context).size.width < 600;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Signup",
-          style: TextStyle(color: Colors.white), // White text color for better contrast
+    String _gender = "Male";
+    bool _termsAccepted = false;
+    String _status = "Offline"; // Status (Online/Offline)
+    DateTime? _lastOnlineTime; // Timestamp for when the user was last online
+
+    File? _imageFile; // For mobile
+    Uint8List? _webImage; // For web
+
+    final ImagePicker _picker = ImagePicker();
+
+    Future<void> _pickImage() async {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        if (kIsWeb) {
+          final bytes = await pickedFile.readAsBytes();
+          setState(() {
+            _webImage = bytes;
+          });
+        } else {
+          setState(() {
+            _imageFile = File(pickedFile.path);
+          });
+        }
+      }
+    }
+
+    Future<void> _updateStatus() async {
+      setState(() {
+        _status = "Online";
+        _lastOnlineTime = DateTime.now();
+      });
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return Scaffold(
+        body: Stack(
+          children: [
+            _buildAnimatedBackground(),
+            Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildProfileImagePicker(),
+                    _buildAnimatedTextField("Username", _usernameController, Icons.person),
+                    _buildAnimatedTextField("Email", _emailController, Icons.email),
+                    _buildAnimatedTextField("Password", _passwordController, Icons.lock, obscureText: true),
+                    _buildGenderSelection(),
+                    _buildTermsCheckbox(),
+                    _buildSignUpButton(),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: Colors.purple, // Dark purple background for the AppBar
-        elevation: 4, // Optional: Adding slight shadow for elevation
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
+      );
+    }
+
+    Widget _buildAnimatedBackground() {
+      return AnimatedContainer(
+        duration: Duration(seconds: 2),
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/img.png"),
-            fit: BoxFit.cover, // Ensures the image covers the full screen
+          gradient: LinearGradient(
+            colors: _gender == "Male"
+                ? [Colors.blue.shade900, Colors.blueAccent]
+                : [Colors.pink.shade900, Colors.pinkAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
+      );
+    }
 
-              children: [
-                Text("Welcome Sky_Nova".toUpperCase(),style: TextStyle(color: Colors.black,fontSize: 30,fontWeight: FontWeight.bold),),
-                smallSize
-                    ? Center(
-                  child: Image.asset(
-                    "assets/logo.png",
-                    height: 150,
-                    width: 150,
-                  ),
-                )
-                    : Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    "assets/logo.png",
-                    height: 200,
-                    width: 200,
-                  ),
-                ),
-                SizedBox(height: 20),
-                // Form container with dynamic width based on screen size
-                Form(
-                  key: logic.formKey,
-                  child: SizedBox(
-                    width: smallSize ? double.infinity : 500, // Dynamic width
-                    child: Column(
-                      crossAxisAlignment: smallSize
-                          ? CrossAxisAlignment.center // Center align for small screens
-                          : CrossAxisAlignment.center, // Left align for large screens
-                      children: [
-                        TextFormField(
-                          controller: logic.nameController,
-                          style: TextStyle(color: Colors.white), // White text color
-                          decoration: InputDecoration(
-                            labelText: "Name",
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your name";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        TextFormField(
-                          controller: logic.emailController,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: "Email",
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return "Please enter your email";
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        Obx(() => TextFormField(
-                          controller: logic.passwordController,
-                          obscureText: logic.isPasswordHidden.value,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: "Password",
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                logic.isPasswordHidden.value
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: logic.togglePasswordVisibility,
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.length < 6) {
-                              return "Password must be at least 6 characters";
-                            }
-                            return null;
-                          },
-                        )),
-                        SizedBox(height: 16),
-                        Obx(() => TextFormField(
-                          controller: logic.confirmPasswordController,
-                          obscureText: logic.isConfirmPasswordHidden.value,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: "Confirm Password",
-                            labelStyle: TextStyle(color: Colors.white),
-                            border: OutlineInputBorder(),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                logic.isConfirmPasswordHidden.value
-                                    ? Icons.visibility_off
-                                    : Icons.visibility,
-                              ),
-                              onPressed: logic.toggleConfirmPasswordVisibility,
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value != logic.passwordController.text) {
-                              return "Passwords do not match";
-                            }
-                            return null;
-                          },
-                        )),
-                        SizedBox(height: 20),
-                        Obx(() => ElevatedButton(
-                          onPressed: logic.isLoading.value
-                              ? null
-                              : logic.signupFirebase,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.purple,
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                vertical: 14, horizontal: 24),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            elevation: 5,
-                          ),
-                          child: logic.isLoading.value
-                              ? CircularProgressIndicator(
-                              color: Colors.white)
-                              : Text(
-                            "Signup",
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        )),
-                        SizedBox(height: 20,),
-                        TextButton(
-                          onPressed: () {
-                            Get.to(()=> LoginPage(),
-                              transition: Transition.circularReveal,
-                              curve: Curves.easeInOutCubic,
-                              duration: Duration(milliseconds: 1200),);
-                          },
-                          child: const Text(
-                            "Already have an account? Login",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+    Widget _buildProfileImagePicker() {
+      return GestureDetector(
+        onTap: _pickImage,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 500),
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2)],
+          ),
+          child: ClipOval(
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 500),
+              child: _webImage != null
+                  ? Image.memory(_webImage!, fit: BoxFit.cover, key: ValueKey(_webImage))
+                  : _imageFile != null
+                  ? Image.file(_imageFile!, fit: BoxFit.cover, key: ValueKey(_imageFile))
+                  : Icon(Icons.add_a_photo, color: Colors.white70, size: 50, key: ValueKey("default")),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
+    Widget _buildAnimatedTextField(String label, TextEditingController controller, IconData icon, {bool obscureText = false}) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Focus(
+          onFocusChange: (hasFocus) => setState(() {}),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 300),
+            height: 60,
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2)],
+            ),
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                prefixIcon: Icon(icon, color: Colors.white),
+                labelText: label,
+                labelStyle: TextStyle(color: Colors.white70),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              ),
+              keyboardType: obscureText ? TextInputType.visiblePassword : TextInputType.text,
+              obscureText: obscureText,
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+      );
+    }
+
+    Widget _buildGenderSelection() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildGenderRadio("Male", Icons.male, Colors.blue),
+          SizedBox(width: 20),
+          _buildGenderRadio("Female", Icons.female, Colors.pink),
+        ],
+      );
+    }
+
+    Widget _buildGenderRadio(String value, IconData icon, Color color) {
+      return GestureDetector(
+        onTap: () => setState(() => _gender = value),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: _gender == value ? color.withOpacity(0.3) : Colors.transparent,
+            borderRadius: BorderRadius.circular(15),
+            border: Border.all(color: color, width: _gender == value ? 3 : 1),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: color, size: 30),
+              SizedBox(width: 10),
+              Text(value, style: TextStyle(color: color, fontSize: 18, fontWeight: FontWeight.bold)),
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget _buildTermsCheckbox() {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Checkbox(
+            value: _termsAccepted,
+            onChanged: (bool? value) => setState(() => _termsAccepted = value!),
+            activeColor: Colors.white,
+            checkColor: Colors.black,
+          ),
+          Text("I accept the terms", style: TextStyle(color: Colors.white)),
+        ],
+      );
+    }
+
+    Widget _buildSignUpButton() {
+      return Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: GestureDetector(
+          onTap: () {
+            if (_termsAccepted) {
+              _updateStatus(); // Mark as online when sign up happens
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sign Up Successful!')));
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please accept the terms!')));
+            }
+          },
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            width: _termsAccepted ? 180 : 150,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2)],
+            ),
+            child: Center(
+              child: Text("Sign Up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
+          ),
+        ),
+      );
+    }
   }
-}
