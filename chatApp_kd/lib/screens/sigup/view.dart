@@ -1,3 +1,4 @@
+/*
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final SignupLogic logic = Get.put(SignupLogic());
+  final SignupScreenLogic logic = Get.put(SignupScreenLogic());
 
   // Controllers
   final TextEditingController _usernameController = TextEditingController();
@@ -189,3 +190,4 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
+*/

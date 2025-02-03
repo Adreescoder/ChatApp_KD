@@ -42,7 +42,13 @@ dependencies:
   image_picker_web:
   image_picker:
   intl:
-  awesome_icons:
+  record:
+  permission_handler:
+  file_picker:
+  path_provider:
+  audioplayers:
+  flutter_sound: ^9.2.1
+
 
 dev_dependencies:
   flutter_test:
