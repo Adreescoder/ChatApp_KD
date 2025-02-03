@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:chatapp_kd/main.dart';
 import 'package:chatapp_kd/screens/chat.dart';
 import 'package:chatapp_kd/services/auth_service.dart';
 import 'package:flutter/material.dart';

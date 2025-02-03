@@ -47,7 +47,7 @@ dependencies:
   file_picker:
   path_provider:
   audioplayers:
-  flutter_sound: ^9.2.1
+  flutter_sound:
 
 
 dev_dependencies:

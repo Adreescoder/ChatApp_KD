@@ -1,4 +1,3 @@
-/*
 import 'package:chatapp_kd/screens/home/view.dart';
 import 'package:chatapp_kd/screens/sigup/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,10 +16,9 @@ class AuthWrapper extends StatelessWidget {
         } else if (snapshot.hasData) {
           return HomePage(); // User is logged in
         } else {
-          return SignupScreen(); // User is not logged in
+          return SignupPage(); // User is not logged in
         }
       },
     );
   }
 }
-*/

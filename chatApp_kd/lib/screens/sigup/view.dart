@@ -1,4 +1,3 @@
-/*
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
@@ -14,7 +13,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final SignupScreenLogic logic = Get.put(SignupScreenLogic());
+  final SignupScreenLogic = Get.put(SignupScreenLogic());
 
   // Controllers
   final TextEditingController _usernameController = TextEditingController();
@@ -133,18 +132,6 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Widget _buildGenderSelection() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildGenderRadio("Male", Icons.male, Colors.blue),
-        const SizedBox(width: 20),
-        _buildGenderRadio("Female", Icons.female, Colors.pink),
-      ],
-    );
-  }
-
-
   Widget _buildTermsCheckbox() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -190,4 +177,3 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 }
-*/
