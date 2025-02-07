@@ -22,10 +22,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp KD'.toUpperCase(),
-      home:  AuthWrapper(),
+      home: AuthWrapper(),
     );
   }
 }
-
-
-/// English ka paper hia
