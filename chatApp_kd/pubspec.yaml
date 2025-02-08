@@ -42,12 +42,6 @@ dependencies:
   image_picker_web:
   image_picker:
   intl:
-  record:
-  permission_handler:
-  file_picker:
-  path_provider:
-  audioplayers:
-  flutter_sound:
 
 
 dev_dependencies:

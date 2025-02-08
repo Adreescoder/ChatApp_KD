@@ -1,3 +1,4 @@
+/*
 import 'package:chatapp_kd/screens/home/view.dart';
 import 'package:chatapp_kd/screens/sigup/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,3 +23,4 @@ class AuthWrapper extends StatelessWidget {
     );
   }
 }
+*/
