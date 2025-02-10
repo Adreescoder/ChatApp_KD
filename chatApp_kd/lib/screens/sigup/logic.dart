@@ -1,36 +1,28 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:chatapp_kd/modles/user.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignupScreenLogic extends GetxController {
+  var selectedImage = Rx<File?>(null);
+  var isLoading = false.obs;
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController nameController = TextEditingController();
-
-  RxBool isLoading = false.obs;
-  Rx<File?> selectedImage = Rx<File?>(null);
-
-  final ImagePicker _picker = ImagePicker();
-
-  // Function to pick an image
-  Future<void> pickImage() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      selectedImage.value = File(image.path);
-    }
-  }
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> signupFirebase() async {
-    String email = emailController.text.trim();
-    String password = passwordController.text.trim();
-    String name = nameController.text.trim();
-
-    if (email.isEmpty || password.isEmpty || name.isEmpty) {
-      Get.snackbar("Error", "Please fill all fields", snackPosition: SnackPosition.BOTTOM);
+    if (nameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty) {
+      Get.snackbar("Error", "All fields are required!",
+          snackPosition: SnackPosition.BOTTOM);
       return;
     }
 
@@ -38,36 +30,28 @@ class SignupScreenLogic extends GetxController {
       isLoading.value = true;
 
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
       );
 
-      User? user = userCredential.user;
-      if (user != null) {
-        await user.updateDisplayName(name);
+      if (userCredential.user != null) {
+      String userId =  userCredential.user!.uid ;
+        UserModel userModel = UserModel(id: userId, name: nameController.text, email: emailController.text, password: passwordController.text,  imageUrl: imageUrl, isOnline: isOnline);
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'uid': userCredential.user!.uid,
+          'name': nameController.text,
+          'email': emailController.text,
+          'imageUrl': '',
+          'createdAt': Timestamp.now(),
+        });
 
-        // Handle image upload (if any)
-        if (selectedImage.value != null) {
-          // You can upload the image to Firebase Storage or handle it as needed
-          // Example: uploadImage(selectedImage.value!);
-        }
-
-        Get.snackbar("Success", "Account created successfully!",
+        Get.snackbar("Success", "Signup Successful!",
             snackPosition: SnackPosition.BOTTOM);
       }
-    } on FirebaseAuthException catch (e) {
-      Get.snackbar("Signup Error", e.message ?? "An error occurred",
-          snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }
-  }
-
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    nameController.dispose();
-    super.onClose();
   }
 }

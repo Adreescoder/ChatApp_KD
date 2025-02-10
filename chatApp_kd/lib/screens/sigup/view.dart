@@ -16,9 +16,7 @@ class _SignupPageState extends State<SignupPage> {
   final logic = Get.put(SignupScreenLogic());
 
   bool _termsAccepted = false;
-
-  Uint8List? _webImage; // For web
-
+  Uint8List? _webImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -38,7 +36,7 @@ class _SignupPageState extends State<SignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Dark theme
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
           Center(
