@@ -1,4 +1,3 @@
-/*
 import 'dart:io';
 import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:flutter/material.dart';
@@ -14,18 +13,10 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final SignupScreenLogic = Get.put(SignupScreenLogic());
-
-  // Controllers
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final logic = Get.put(SignupScreenLogic());
 
   bool _termsAccepted = false;
-  String _status = "Offline"; // User status (Online/Offline)
-  DateTime? _lastOnlineTime; // Timestamp for last online activity
 
-  File? _imageFile; // For mobile
   Uint8List? _webImage; // For web
 
   final ImagePicker _picker = ImagePicker();
@@ -39,23 +30,15 @@ class _SignupPageState extends State<SignupPage> {
           _webImage = bytes;
         });
       } else {
-        setState(() {
-          _imageFile = File(pickedFile.path);
-        });
+        logic.selectedImage.value = File(pickedFile.path);
       }
     }
-  }
-
-  void _updateStatus() {
-    setState(() {
-      _status = "Online";
-      _lastOnlineTime = DateTime.now();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black, // Dark theme
       body: Stack(
         children: [
           Center(
@@ -64,10 +47,9 @@ class _SignupPageState extends State<SignupPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   _buildProfileImagePicker(),
-                  _buildAnimatedTextField("Username", _usernameController, Icons.person),
-                  _buildAnimatedTextField("Email", _emailController, Icons.email),
-                  _buildAnimatedTextField("Password", _passwordController, Icons.lock, obscureText: true),
-                  _buildGenderSelection(),
+                  _buildAnimatedTextField("Name", logic.nameController, Icons.person),
+                  _buildAnimatedTextField("Email", logic.emailController, Icons.email),
+                  _buildAnimatedTextField("Password", logic.passwordController, Icons.lock, obscureText: true),
                   _buildTermsCheckbox(),
                   _buildSignUpButton(),
                 ],
@@ -79,30 +61,31 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-
   Widget _buildProfileImagePicker() {
     return GestureDetector(
       onTap: _pickImage,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 500),
-        width: 120,
-        height: 120,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 3),
-          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2)],
-        ),
-        child: ClipOval(
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 500),
-            child: _webImage != null
-                ? Image.memory(_webImage!, fit: BoxFit.cover, key: ValueKey(_webImage))
-                : _imageFile != null
-                ? Image.file(_imageFile!, fit: BoxFit.cover, key: ValueKey(_imageFile))
-                : const Icon(Icons.add_a_photo, color: Colors.white70, size: 50, key: ValueKey("default")),
+      child: Obx(() {
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3),
+            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10, spreadRadius: 2)],
           ),
-        ),
-      ),
+          child: ClipOval(
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              child: _webImage != null
+                  ? Image.memory(_webImage!, fit: BoxFit.cover, key: ValueKey(_webImage))
+                  : logic.selectedImage.value != null
+                  ? Image.file(logic.selectedImage.value!, fit: BoxFit.cover, key: ValueKey(logic.selectedImage.value))
+                  : const Icon(Icons.add_a_photo, color: Colors.white70, size: 50, key: ValueKey("default")),
+            ),
+          ),
+        );
+      }),
     );
   }
 
@@ -151,31 +134,33 @@ class _SignupPageState extends State<SignupPage> {
   Widget _buildSignUpButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
-      child: GestureDetector(
-        onTap: () {
-          if (_termsAccepted) {
-            _updateStatus(); // Mark as online when sign up happens
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Sign Up Successful!')));
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please accept the terms!')));
-          }
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeInOut,
-          width: _termsAccepted ? 180 : 150,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-            boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2)],
+      child: Obx(() {
+        return GestureDetector(
+          onTap: () {
+            if (_termsAccepted) {
+              logic.signupFirebase();
+            } else {
+              Get.snackbar("Terms", "Please accept the terms before signing up.", snackPosition: SnackPosition.BOTTOM);
+            }
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            width: _termsAccepted ? 180 : 150,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 8, spreadRadius: 2)],
+            ),
+            child: Center(
+              child: logic.isLoading.value
+                  ? const CircularProgressIndicator(color: Colors.black)
+                  : const Text("Sign Up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            ),
           ),
-          child: const Center(
-            child: Text("Sign Up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-          ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
-*/
