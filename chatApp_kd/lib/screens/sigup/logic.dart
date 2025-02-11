@@ -55,4 +55,4 @@ class SignupScreenLogic extends GetxController {
     }
   }
 }
-/// ok 
+/// ok
