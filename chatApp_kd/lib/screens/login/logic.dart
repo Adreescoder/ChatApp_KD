@@ -1,3 +1,4 @@
+import 'package:chatapp_kd/screens/home/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class LoginLogic extends GetxController {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       Get.snackbar("Success", "Login Successful!");
-      Get.offAllNamed("/home"); // Navigate to HomeScreen
+      Get.to(()=> HomePage()); // Navigate to HomeScreen
     } on FirebaseAuthException catch (e) {
       Get.snackbar("Login Failed", e.message ?? "Something went wrong");
     } finally {
