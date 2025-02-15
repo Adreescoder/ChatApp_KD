@@ -1,3 +1,4 @@
+import 'package:chatapp_kd/modles/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -10,6 +11,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return FutureBuilder(
+        future: logic.getUserFirebase(),
+        builder: (context, AsyncSnapshot<UserModel){
+
+          return ;
+    });
   }
 }
