@@ -3,7 +3,7 @@ class UserModel {
   String name;
   String email;
   String password;
-  String confirmPassword;
+
   String imageUrl;
   bool isOnline;
 
@@ -12,7 +12,7 @@ class UserModel {
     required this.name,
     required this.email,
     required this.password,
-    required this.confirmPassword,
+
     required this.imageUrl,
     required this.isOnline,
   });
@@ -24,7 +24,7 @@ class UserModel {
       name: json['name'],
       email: json['email'],
       password: json['password'],
-      confirmPassword: json['confirmPassword'],
+
       imageUrl: json['imageUrl'],
       isOnline: json['isOnline'] ?? false,
     );
@@ -37,7 +37,7 @@ class UserModel {
       'name': name,
       'email': email,
       'password': password,
-      'confirmPassword': confirmPassword,
+
       'imageUrl': imageUrl,
       'isOnline': isOnline,
     };
