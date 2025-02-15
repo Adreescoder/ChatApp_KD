@@ -26,7 +26,7 @@ class SigupLogic extends GetxController {
     else{
 
      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password) ;
-     U
+     userCredential.
     }
   }
   
