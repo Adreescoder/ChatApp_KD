@@ -65,3 +65,4 @@ class HomeLogic extends GetxController {
   }
 }
 ///Master mind
+///Master mind
