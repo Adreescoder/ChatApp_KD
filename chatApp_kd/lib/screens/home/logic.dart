@@ -64,5 +64,3 @@ class HomeLogic extends GetxController {
   await  auth.signOut();
   }
 }
-///Master mind
-///Master mind
