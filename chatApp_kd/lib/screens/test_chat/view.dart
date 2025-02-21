@@ -1,80 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../modles/message.dart';
-import 'logic.dart';
 
-class TestChatPage extends StatelessWidget {
-  TestChatPage({Key? key}) : super(key: key);
-
-  final TestChatLogic logic = Get.put(TestChatLogic());
-  final TextEditingController messageController = TextEditingController();
-
+class PortfolioScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chat")),
-      body: Column(
-        children: [
-          Expanded(
-            child: Obx(() => logic.messages.isEmpty
-                ? Center(child: Text("No messages yet"))
-                : ListView.builder(
-              reverse: true,
-              itemCount: logic.messages.length,
-              itemBuilder: (context, index) {
-                Message msg = logic.messages[index];
-                return ChatBubble(msg: msg);
-              },
-            )),
-          ),
-
-          // Typing Indicator
-          Obx(() => logic.isTyping.value
-              ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text("Typing..."),
-            ),
-          )
-              : SizedBox()),
-
-          // Message Input Field
-          ChatInputField(chatController: logic, messageController: messageController),
-        ],
-      ),
-    );
-  }
-}
-
-// 🔹 Chat Bubble Widget
-class ChatBubble extends StatelessWidget {
-  final Message msg;
-  ChatBubble({required this.msg});
-
-  @override
-  Widget build(BuildContext context) {
-    bool isSender = msg.senderId == "user1"; // Replace with actual user logic
-
-    return Align(
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: isSender ? Colors.blueAccent : Colors.grey[300],
-          borderRadius: BorderRadius.circular(15),
-        ),
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(msg.text, style: TextStyle(color: isSender ? Colors.white : Colors.black)),
-            if (msg.isEdited)
-              Text("Edited", style: TextStyle(fontSize: 10, color: Colors.grey)),
-            if (msg.reactions != null)
-              Wrap(
-                children: msg.reactions!.entries.map((e) => Text("${e.key} ${e.value}")).toList(),
-              ),
+            AnimatedHeader(),
+            AboutSection(),
+            SkillsSection(),
+            ProjectsSection(),
+            ContactSection(),
           ],
         ),
       ),
@@ -82,39 +20,143 @@ class ChatBubble extends StatelessWidget {
   }
 }
 
-// 🔹 Message Input Field
-class ChatInputField extends StatelessWidget {
-  final TestChatLogic chatController;
-  final TextEditingController messageController;
-
-  ChatInputField({required this.chatController, required this.messageController});
-
+class AnimatedHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: messageController,
-              onChanged: (value) => chatController.toggleTyping(value.isNotEmpty),
-              decoration: InputDecoration(hintText: "Type a message...", border: InputBorder.none),
+    return Stack(
+      children: [
+        Container(
+          height: 400,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.purple, Colors.black],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.send, color: Colors.blue),
-            onPressed: () {
-              if (messageController.text.isNotEmpty) {
-                chatController.sendMessage(messageController.text, "user1", "user2");
-                messageController.clear();
-                chatController.toggleTyping(false);
-              }
-            },
+        ),
+        Positioned(
+          left: 20,
+          top: 100,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Hello, I'm", style: TextStyle(color: Colors.white, fontSize: 24)),
+              Text("Muhammad Adrees Nazir", style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold)),
+              SizedBox(height: 10),
+              Text("Flutter Developer | UI/UX Designer", style: TextStyle(color: Colors.white70, fontSize: 18)),
+            ],
+          ),
+        ),
+        Positioned(
+          right: 20,
+          bottom: 0,
+          child: Image.asset('assets/img.png', height: 250),
+        )
+      ],
+    );
+  }
+}
+
+class AboutSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("About Me", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Text("I'm a passionate Flutter developer with experience in building modern, responsive, and scalable applications for web and mobile platforms."),
+        ],
+      ),
+    );
+  }
+}
+
+class SkillsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Skills", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Wrap(
+            spacing: 10,
+            children: ["Flutter", "Dart", "Firebase", "UI/UX", "GetX"].map((skill) {
+              return Chip(label: Text(skill));
+            }).toList(),
           ),
         ],
       ),
     );
   }
 }
+
+class ProjectsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Projects", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          ProjectCard(title: "E-Commerce App", description: "A full-featured online shopping app."),
+          ProjectCard(title: "Chat App", description: "Real-time messaging with Firebase."),
+        ],
+      ),
+    );
+  }
+}
+
+class ProjectCard extends StatelessWidget {
+  final String title;
+  final String description;
+
+  ProjectCard({required this.title, required this.description});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        title: Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        subtitle: Text(description),
+        trailing: Icon(Icons.arrow_forward_ios),
+      ),
+    );
+  }
+}
+
+class ContactSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Contact Me", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              Icon(Icons.email, color: Colors.purple),
+              SizedBox(width: 10),
+              Text("adreesnazir@gmail.com"),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+/// Master code you
