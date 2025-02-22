@@ -42,7 +42,7 @@ dependencies:
   image_picker_web:
   image_picker:
   intl:
-
+  flutter_animate:
 
 
 dev_dependencies:
