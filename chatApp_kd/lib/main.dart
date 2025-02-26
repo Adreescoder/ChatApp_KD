@@ -1,4 +1,4 @@
-import 'package:chatapp_kd/screens/test_chat/view.dart';
+import 'package:chatapp_kd/screens/sigup/view.dart';
 import 'package:chatapp_kd/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp KD'.toUpperCase(),
-      home: PortfolioScreen(),
+      home: AuthWrapper(),
     );
   }
 }

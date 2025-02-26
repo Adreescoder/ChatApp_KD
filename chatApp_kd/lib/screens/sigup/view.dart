@@ -1,150 +1,146 @@
 import 'dart:io';
-
 import 'package:chatapp_kd/screens/login/view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-
 import 'logic.dart';
 
-class SigupPage extends StatefulWidget {
-  SigupPage({Key? key}) : super(key: key);
+const Color pastelPink = Color(0xFFF3D5DB);
+const Color pastelOffWhite = Color(0xFFFEF5F4);
+const Color pastelGreen = Color(0xFFCCDDC0);
+const Color pastelBeige = Color(0xFFF8E4C4);
+const Color pastelBlue = Color(0xFFC9E0EC);
+const Color pastelLavender = Color(0xFFF7DFEF);
+
+class SignupPage extends StatefulWidget {
+  SignupPage({Key? key}) : super(key: key);
 
   @override
-  State<SigupPage> createState() => _SigupPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SigupPageState extends State<SigupPage> {
+class _SignupPageState extends State<SignupPage> {
   final SignupLogic logic = Get.put(SignupLogic());
-  Uint8List? bytesFromPicker ;
+  Uint8List? bytesFromPicker;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Welcome",style: TextStyle(
+      backgroundColor: Colors.blueAccent, // 👈 Background color updated
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Welcome",
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
-                fontSize: 18
-              ),),
-              Center(
-                child: InkWell(
-                  onTap: ()async{
-                    if(kIsWeb){
-                   bytesFromPicker  = await ImagePickerWeb.getImageAsBytes();
-                   setState(() {});
-                    }else if(Platform.isAndroid || Platform.isIOS){
-                      Get.snackbar("Ye app mobile pir work nai karti", "Sorry Sir");
-                    }
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    height: 150,
-                    width: 150,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(75)
-                    ),
-                    child: ClipOval(
-                      child: bytesFromPicker!=null ?Image.memory(bytesFromPicker!): Icon(Icons.camera),
-                    ),
-                  ),
-                ),
+                color: pastelPink, // 👈 Soft pastel pink
+                fontSize: 22,
               ),
-              textFieldBuild(
-                controller: logic.nameController,
-                hintText: "Enter your name",
-                icon: Icons.person,
-              ),
-              textFieldBuild(
-                controller: logic.emailController,
-                hintText: "Enter your email",
-                icon: Icons.email,
-              ),
-              textFieldBuild(
-                controller: logic.passwordController,
-                hintText: "Enter your password",
-                icon: Icons.lock,
-                isPassword: true, // Hide password
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (bytesFromPicker != null) {
-                    String folderPath = "profile_images"; // Define folder path
-                    String? imageUrl = await logic.uploadImage(folderPath, bytesFromPicker!);
-
-                    if (imageUrl != null) {
-                      await logic.signupUser(imageUrl);
-                    } else {
-                      Get.snackbar("Error", "Image upload failed.");
-                    }
-                  } else {
-                    Get.snackbar("Error", "Please select an image.");
+            ),
+            Center(
+              child: InkWell(
+                onTap: () async {
+                  if (kIsWeb) {
+                    bytesFromPicker = await ImagePickerWeb.getImageAsBytes();
+                    setState(() {});
+                  } else if (Platform.isAndroid || Platform.isIOS) {
+                    Get.snackbar("Ye app mobile pir work nahi karti", "Sorry Sir");
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32), // Bigger padding
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30), // More rounded button
-                  ),
-                  backgroundColor: Colors.transparent, // Gradient effect will be applied
-                  elevation: 5, // Adds a slight shadow effect
-                  shadowColor: Colors.deepPurple.withOpacity(0.4), // Smooth shadow
-                ),
-                child: Ink(
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 150,
+                  width: 150,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [Colors.deepPurple, Colors.purpleAccent], // Gradient colors
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(30), // Match button shape
+                    color: pastelLavender, // 👈 Soft Lavender shade
+                    borderRadius: BorderRadius.circular(75),
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 16),
-                    child: Text(
-                      "Sign Up",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
+                  child: ClipOval(
+                    child: bytesFromPicker != null
+                        ? Image.memory(bytesFromPicker!)
+                        : Icon(Icons.camera, color: pastelPink), // 👈 Pastel Pink Icon
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
-              InkWell(
+            ),
+            textFieldBuild(
+              controller: logic.nameController,
+              hintText: "Enter your name",
+              icon: Icons.person,
+            ),
+            textFieldBuild(
+              controller: logic.emailController,
+              hintText: "Enter your email",
+              icon: Icons.email,
+            ),
+            textFieldBuild(
+              controller: logic.passwordController,
+              hintText: "Enter your password",
+              icon: Icons.lock,
+              isPassword: true,
+            ),
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () async {
+                if (bytesFromPicker != null) {
+                  String folderPath = "profile_images";
+                  String? imageUrl = await logic.uploadImage(folderPath, bytesFromPicker!);
+
+                  if (imageUrl != null) {
+                    await logic.signupUser(imageUrl);
+                  } else {
+                    Get.snackbar("Error", "Image upload failed.");
+                  }
+                } else {
+                  Get.snackbar("Error", "Please select an image.");
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                backgroundColor: pastelBlue, // 👈 Soft Pastel Blue
+                elevation: 5,
+                shadowColor: pastelGreen.withOpacity(0.4),
+              ),
+              child: Text(
+                "Sign Up",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.2,
+                ),
+              ),
+            ),
+            SizedBox(height: 20),
+            Center(
+              child: InkWell(
                 onTap: () {
                   Get.to(() => LoginPage());
                 },
                 child: Text(
                   "Already have an account?",
                   style: TextStyle(
-                    color: Colors.deepPurple,
+                    color: pastelBeige, // 👈 Pastel Beige
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    decoration: TextDecoration.underline, // Adds underline effect
+                    decoration: TextDecoration.underline,
                   ),
                 ),
-              )
-
-
-
-            ],
-          ),
-        ));
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
-
-
-
 
 Widget textFieldBuild({
   required TextEditingController controller,
@@ -156,10 +152,12 @@ Widget textFieldBuild({
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: TextField(
       controller: controller,
-      obscureText: isPassword, // Hide text if it's a password field
+      obscureText: isPassword,
       decoration: InputDecoration(
-        prefixIcon: Icon(icon, color: Colors.purple),
+        prefixIcon: Icon(icon, color: pastelGreen), // 👈 Soft Green Icon
         hintText: hintText,
+        filled: true,
+        fillColor: pastelLavender.withOpacity(0.2), // 👈 Light lavender background
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
