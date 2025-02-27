@@ -41,6 +41,7 @@ dependencies:
   firebase_storage:
   image_picker_web:
   image_picker:
+  font_awesome_flutter: ^10.7.0
   intl:
   flutter_animate:
 
