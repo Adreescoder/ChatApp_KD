@@ -10,5 +10,4 @@ class ChatLogic extends GetxController {
   var message = <Message>[].obs ;
   FirebaseFirestore firestore = FirebaseFirestore.instance ;
   FirebaseAuth auth = FirebaseAuth.instance ;
-// master oo
 }
