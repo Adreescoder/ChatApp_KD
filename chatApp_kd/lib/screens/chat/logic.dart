@@ -10,4 +10,14 @@ class ChatLogic extends GetxController {
   var message = <Message>[].obs ;
   FirebaseFirestore firestore = FirebaseFirestore.instance ;
   FirebaseAuth auth = FirebaseAuth.instance ;
+
+  void sendMessage(String chatRoomId, String messageText,String receiverId){
+     String senderId = auth.currentUser!.uid ;
+    firestore.collection("ChattingKD").doc(chatRoomId).collection("Message").add({
+      senderId : senderId ,
+      messageText : messageText ,
+   //   DateTime : DateTime.timestamp(),
+      receiverId : receiverId ,
+    });
+  }
 }

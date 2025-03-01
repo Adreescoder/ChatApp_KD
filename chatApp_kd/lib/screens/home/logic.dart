@@ -28,7 +28,6 @@ class HomeLogic extends GetxController {
 
   Future<void> createChatRoomId(
       String otherUserId, String receiverName, String receiverImage, bool isOnline) async {
-
     String currentUserId = auth.currentUser!.uid;
 
     // ✅ Correct ChatRoomId Generation

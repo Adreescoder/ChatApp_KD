@@ -10,7 +10,7 @@ class Message {
   String status; // 'sent', 'delivered', 'read'
   Timestamp timestamp;
   String? replyToMessageId;
-  Map<String, int>? reactions; // Reactions with count {'❤️': 5, '😂': 3}
+  Map<String, int>? reactions;
   bool isEdited;
   bool isDeleted;
   String? audioUrl;
@@ -21,7 +21,7 @@ class Message {
   String? encryptedText;
   String? decryptionKey;
   bool isTyping;
-  Map<String, Timestamp>? readBy; // Read receipts in group chat
+  Map<String, Timestamp>? readBy;
   bool isPinned;
   Timestamp? deliveredAt;
   Map<String, int>? pollOptions;
@@ -53,7 +53,7 @@ class Message {
     this.isPinned = false,
     this.deliveredAt,
     this.pollOptions,
-    this.isPoll,
+    this.isPoll = false,
     this.deviceId,
   });
 
@@ -114,8 +114,86 @@ class Message {
       isPinned: map['isPinned'] ?? false,
       deliveredAt: map['deliveredAt'],
       pollOptions: map['pollOptions'] != null ? Map<String, int>.from(map['pollOptions']) : null,
-      isPoll: map['isPoll'],
+      isPoll: map['isPoll'] ?? false,
       deviceId: map['deviceId'],
     );
+  }
+
+  Future<void> sendMessage() async {
+    await FirebaseFirestore.instance.collection('messages').doc(id).set(toMap());
+  }
+
+  Future<void> updateMessage() async {
+    isEdited = true;
+    await FirebaseFirestore.instance.collection('messages').doc(id).update(toMap());
+  }
+
+  Future<void> deleteMessage() async {
+    isDeleted = true;
+    await FirebaseFirestore.instance.collection('messages').doc(id).update({'isDeleted': true});
+  }
+
+  Future<void> markAsRead() async {
+    isRead = true;
+    seenAt = Timestamp.now();
+    await FirebaseFirestore.instance.collection('messages').doc(id).update({'isRead': true, 'seenAt': seenAt});
+  }
+
+  Future<void> addReaction(String emoji) async {
+    reactions ??= {};
+    reactions![emoji] = (reactions![emoji] ?? 0) + 1;
+    await updateMessage();
+  }
+
+  Future<void> removeReaction(String emoji) async {
+    if (reactions != null && reactions!.containsKey(emoji)) {
+      reactions!.remove(emoji);
+      await updateMessage();
+    }
+  }
+
+  Future<void> markAsDelivered() async {
+    status = 'delivered';
+    deliveredAt = Timestamp.now();
+    await FirebaseFirestore.instance.collection('messages').doc(id).update({'status': 'delivered', 'deliveredAt': deliveredAt});
+  }
+
+  Future<void> votePoll(String option) async {
+    if (isPoll == true && pollOptions != null) {
+      pollOptions![option] = (pollOptions![option] ?? 0) + 1;
+      await updateMessage();
+    }
+  }
+
+  void encryptMessage(String key) {
+    decryptionKey = key;
+    encryptedText = 'Encrypted(${text})';
+    text = '[Encrypted Message]';
+  }
+
+  void decryptMessage() {
+    if (encryptedText != null && decryptionKey != null) {
+      text = encryptedText!.replaceFirst('Encrypted(', '').replaceFirst(')', '');
+    }
+  }
+
+  Future<void> forwardMessage(String newReceiverId) async {
+    Message forwarded = Message(
+      id: FirebaseFirestore.instance.collection('messages').doc().id,
+      senderId: senderId,
+      receiverId: newReceiverId,
+      text: text,
+      messageType: messageType,
+      isRead: false,
+      status: 'sent',
+      timestamp: Timestamp.now(),
+      forwardedFrom: id,
+    );
+    await forwarded.sendMessage();
+  }
+
+  Future<void> togglePin() async {
+    isPinned = !isPinned;
+    await updateMessage();
   }
 }
