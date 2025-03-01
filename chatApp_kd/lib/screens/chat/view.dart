@@ -1,16 +1,21 @@
 import 'package:chatapp_kd/screens/chat/logic.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
 class ChatPage extends StatelessWidget {
-  ChatPage({Key? key}) : super(key: key);
+  final String chatRoomId;
+  final String receiverId;
+  final String receiverName;
+  final String receiverImage;
+  final bool isOnline;
+  ChatPage({Key? key, required this.chatRoomId, required this.receiverId, required this.receiverName, required this.receiverImage, required this.isOnline}) : super(key: key);
 
   final TextEditingController messageController = TextEditingController();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final String senderId = "user1"; // Replace with dynamic user ID
-  final String receiverId = "user2"; // Replace with dynamic receiver ID
+
 
   final logic = Get.put(ChatLogic());
 
@@ -39,7 +44,7 @@ class ChatPage extends StatelessWidget {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     var message = messages[index];
-                    bool isMe = message['senderId'] == senderId;
+                    bool isMe = message['senderId'] == FirebaseAuth.instance.currentUser!.uid;
 
                     return Align(
                       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -76,7 +81,7 @@ class ChatPage extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(Icons.send, color: Colors.blue),
-                  onPressed: logic.sendMessage(),
+                  onPressed: sendMessage,
                 ),
               ],
             ),
@@ -85,4 +90,11 @@ class ChatPage extends StatelessWidget {
       ),
     );
   }
+  void sendMessage(){
+    if(logic.messageController.text.isNotEmpty){
+      logic.sendMessage(chatRoomId, logic.messageController.text.trim(), receiverId);
+      messageController.clear() ;
+    }
+  }
 }
+

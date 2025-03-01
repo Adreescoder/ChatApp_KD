@@ -26,35 +26,40 @@ class HomeLogic extends GetxController {
     return userModelList;
   }
 
-  Future<void> createChatRoomId(
-      String otherUserId, String receiverName, String receiverImage, bool isOnline) async {
-    String currentUserId = auth.currentUser!.uid;
+  Future<void> createChatRoomId(String otherUserId, String receiverName, String receiverImage, bool isOnline) async {
+    try {
+      String currentUserId = auth.currentUser!.uid;
+      String chatRoomId = currentUserId.hashCode <= otherUserId.hashCode
+          ? "$currentUserId-$otherUserId"
+          : "$otherUserId-$currentUserId";
 
-    // ✅ Correct ChatRoomId Generation
-    String chatRoomId = currentUserId.hashCode <= otherUserId.hashCode
-        ? "$currentUserId-$otherUserId"
-        : "$otherUserId-$currentUserId";
+      DocumentSnapshot chatRoomDoc = await firestore.collection("Chats").doc(chatRoomId).get();
 
-    // ✅ Correct Firestore Collection Name
-    DocumentSnapshot chatDoc = await firestore.collection("Chats_Man").doc(chatRoomId).get();
+      if (!chatRoomDoc.exists) {
 
-    if (!chatDoc.exists) {
-      await firestore.collection("Chats_Man").doc(chatRoomId).set({
-        'chatRoomId': chatRoomId,
-        'participants': [currentUserId, otherUserId],
-        'createdAt': FieldValue.serverTimestamp(),
-      });
-
-      // ✅ Navigate to ChatPage
-      Get.to(() => ChatPage());
-
-      if (kDebugMode) {
-        print("✅ New Chat Room Created: $chatRoomId");
+        await firestore.collection('ChatsRoomId').doc(chatRoomId).set({
+          'chatRoomId': chatRoomId,
+          'participants': [currentUserId, otherUserId],
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+        if (kDebugMode) {
+          print("✅ New Chat Room Created: $chatRoomId");
+        }
+      } else {
+        if (kDebugMode) {
+          print("⚡ Chat Room Already Exists: $chatRoomId");
+        }
       }
-    } else {
-      if (kDebugMode) {
-        print("⚡ Chat Room Already Exists: $chatRoomId");
-      }
+      // Navigate to ChatPage
+      Get.to(() => ChatPage(
+        chatRoomId: chatRoomId,
+        receiverId: otherUserId,
+        receiverName: receiverName,
+        receiverImage: receiverImage,
+        isOnline: isOnline,
+      ));
+    } catch (e) {
+      Get.snackbar("Error", "❌ Failed to create chat room: $e");
     }
   }
 

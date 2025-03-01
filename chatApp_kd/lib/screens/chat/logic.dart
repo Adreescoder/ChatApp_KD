@@ -11,13 +11,17 @@ class ChatLogic extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance ;
   FirebaseAuth auth = FirebaseAuth.instance ;
 
-  void sendMessage(String chatRoomId, String messageText,String receiverId){
-     String senderId = auth.currentUser!.uid ;
-    firestore.collection("ChattingKD").doc(chatRoomId).collection("Message").add({
-      senderId : senderId ,
-      messageText : messageText ,
-   //   DateTime : DateTime.timestamp(),
-      receiverId : receiverId ,
-    });
+  Future<void> sendMessage(String chatRoomId, String messageText, String receiverId) async {
+    try {
+      String senderId = FirebaseAuth.instance.currentUser!.uid;
+      await FirebaseFirestore.instance.collection('Chatting').doc(chatRoomId).collection('Messages').add({
+        'senderId': senderId,
+        'receiverId': receiverId,
+        'messageText': messageText,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      Get.snackbar('Error', 'Failed to send message: $e');
+    }
   }
 }
