@@ -44,6 +44,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   intl:
   flutter_animate:
+  google_mobile_ads:
 
 
 dev_dependencies:
