@@ -1,5 +1,4 @@
 import 'package:chatapp_kd/screens/google%20ads.dart';
-import 'package:chatapp_kd/services/auth_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -28,3 +27,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Master tou 
