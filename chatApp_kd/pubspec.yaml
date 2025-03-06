@@ -39,8 +39,8 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   firebase_storage:
-  google_mobile_ads:
-
+  video_player:
+  image_picker:
 
 dev_dependencies:
   flutter_test:
