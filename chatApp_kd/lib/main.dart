@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ChatApp KD'.toUpperCase(),
-      home: UploadVideoScreen(),
+      home: UploadScreen(),
     );
   }
 }

@@ -41,6 +41,8 @@ dependencies:
   firebase_storage:
   video_player:
   image_picker:
+  file_picker:
+  flutter_spinkit:
 
 dev_dependencies:
   flutter_test:
